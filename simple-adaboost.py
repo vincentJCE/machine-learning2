@@ -1,7 +1,6 @@
 n = 10
 X = list(range(n))
 Y = [1, 1, 1,  -1, -1, -1,  1, 1, 1,  -1]
-
 import math
 def weak_classifier(X, Y, D):
     min_error = 10000
@@ -10,7 +9,7 @@ def weak_classifier(X, Y, D):
     #is_positve=True,在split左边被分类为-1，右边被分类为1
     #is_positive=False, 在split左边被分类为1， 右边被分类为-1
     for split in range(n+1):
-        
+       
         sum = 0
         for i in range(split):
             if Y[i] == 1:
@@ -18,12 +17,12 @@ def weak_classifier(X, Y, D):
         for i in range(split, n):
             if Y[i] == -1:
                 sum += D[i]
-        
+       
         if sum < min_error:
             index = split
             min_error = sum
             is_positive = True
-            
+           
 
  
 
@@ -39,7 +38,7 @@ def weak_classifier(X, Y, D):
             index = split
             min_error = sum
             is_positive = False
-            
+           
 
     Y_hat = list(range(n))
     if is_positive:
@@ -53,20 +52,24 @@ def weak_classifier(X, Y, D):
             Y_hat[i] = 1
         for i in range(index, n):
             Y_hat[i] = -1
-            
+           
     return (Y_hat, min_error)
 
 def main():
     D = [1/n] * n
     H = [0] * n
-    M = 3
+    M = 13
+    #D是每轮迭代为数据赋予的分布权重
+    #H是预测值
     for m in range(M):
         Y_hat, error = weak_classifier(X, Y, D)
+        print('error', error)
         if error == 0:
             print('find a perfect classifier and break')
             break
         alpha = 0.5*math.log((1-error)/error)
-        print('alpha', alpha)
+        #print('alpha', alpha)
+        #alpha是对分类器更新的权重
         for i in range(n):
             H[i] += alpha*Y_hat[i]
         Z = 0
@@ -75,8 +78,8 @@ def main():
             Z += D[i]
         for i in range(n):
             D[i] /= Z
-            
+           
     print('Real label:  ', Y)
     print('Prediction:  ', H)
-        
+       
 main()
